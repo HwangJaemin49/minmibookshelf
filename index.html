@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>민미 서재 | 우리들의 공유 책장</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --shelf-color: #5d4037;
+            --shelf-shadow: #3e2723;
+            --bg-color: #f5f5f7;
+            --text-color: #333;
+            --accent-color: #8d6e63;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Noto Serif KR', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* --- Passcode Screen --- */
+        #passcode-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out, visibility 0.5s;
+        }
+
+        #passcode-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .passcode-container {
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: 4px;
+            color: var(--shelf-color);
+        }
+
+        #passcode-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            letter-spacing: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #passcode-input:focus {
+            border-color: var(--shelf-color);
+        }
+
+        .error-msg {
+            color: #d32f2f;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* --- Main Bookshelf --- */
+        #main-content {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #666;
+            font-style: italic;
+        }
+
+        .bookshelf-container {
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        .shelf {
+            position: relative;
+            background: var(--shelf-color);
+            height: 15px;
+            width: 100%;
+            margin-top: 180px; /* Space for books */
+            border-radius: 2px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .shelf::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            background: var(--shelf-shadow);
+            transform: perspective(400px) rotateX(-45deg);
+            transform-origin: top;
+        }
+
+        .books-grid {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding: 0 10px;
+            flex-wrap: wrap;
+        }
+
+        .book {
+            position: relative;
+            width: 100px;
+            height: 150px;
+            margin: 0 5px 20px 5px;
+            transition: transform 0.3s;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .book:hover {
+            transform: translateY(-10px) rotateY(-10deg);
+        }
+
+        .book img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            border-radius: 2px 5px 5px 2px;
+        }
+
+        .book-info {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.7rem;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .book:hover .book-info {
+            opacity: 1;
+        }
+
+        /* --- Floating Action Button --- */
+        #add-book-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--shelf-color);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s, background-color 0.3s;
+            z-index: 100;
+        }
+
+        #add-book-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            background-color: var(--shelf-shadow);
+        }
+
+        /* --- Modal --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--shelf-color);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            background: var(--shelf-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #search-results {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-item {
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-item:hover {
+            background: #f9f9f9;
+        }
+
+        .search-item img {
+            width: 50px;
+            height: 75px;
+            object-fit: cover;
+        }
+
+        .search-item-info h4 {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .search-item-info p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 600px) {
+            .shelf { margin-top: 150px; }
+            .book { width: 70px; height: 105px; }
+            #add-book-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+        }
+    </style>
+  <script type="module" crossorigin src="/minmibookshelf/assets/index-Blbf3Nkm.js"></script>
+</head>
+<body>
+
+    <!-- Passcode Section -->
+    <div id="passcode-screen">
+        <div class="passcode-container">
+            <div class="logo-text">민미 서재</div>
+            <p>비밀번호를 입력하세요</p>
+            <input type="password" id="passcode-input" maxlength="4" placeholder="••••">
+            <div id="error-msg" class="error-msg">비밀번호가 틀렸습니다.</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <header>
+            <h1>민미 서재</h1>
+            <p>거창하지 않은 독서 모임</p>
+        </header>
+
+        <div id="bookshelves" class="bookshelf-container">
+            <!-- Shelves will be generated here -->
+        </div>
+
+        <button id="add-book-btn" title="책 추가하기">+</button>
+    </div>
+
+    <!-- Add Book Modal -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>책 추가하기</h2>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="책 제목을 입력하세요...">
+                <button id="search-btn">검색</button>
+            </div>
+            <div id="search-results"></div>
+        </div>
+    </div>
+
+</body>
+</html>
