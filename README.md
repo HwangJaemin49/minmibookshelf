@@ -1,3 +1,5 @@
+<img width="1115" height="909" alt="image" src="https://github.com/user-attachments/assets/7c0619e7-8704-4c46-b1dc-568454d721e2" />
+
  # 민미 서재 (Minmi Bookshelf)                                                                           
                                                                                                            
 민미의, 민미를 위한, 민미에 의한
