@@ -352,15 +352,70 @@
         }
 
         @media (max-width: 600px) {
-            .shelf { margin-top: 190px; }
-            .book { width: 70px; height: 105px; margin-bottom: 8px; }
-            .book:hover { margin-bottom: 45px; }
-            .book-info { width: 110px; font-size: 0.65rem; }
-            #add-book-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; }
-            .meeting-form { grid-template-columns: 1fr; }
+            #main-content {
+                padding: 36px 22px 120px;
+            }
+
+            header {
+                margin-bottom: 42px;
+            }
+
+            header h1 {
+                font-size: 2.4rem;
+            }
+
+            .bookshelf-container {
+                padding-bottom: 80px;
+            }
+
+            .shelf {
+                margin-top: 150px;
+            }
+
+            .books-grid {
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                padding: 0 8px;
+            }
+
+            .book {
+                width: 54px;
+                height: 82px;
+                margin: 0 0 6px 0;
+            }
+
+            .book:hover {
+                margin-bottom: 36px;
+            }
+
+            .book-info {
+                width: 90px;
+                bottom: -42px;
+                font-size: 0.58rem;
+            }
+
+            .delete-book-btn {
+                display: block;
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+                top: -8px;
+                right: -8px;
+            }
+
+            #add-book-btn {
+                bottom: 24px;
+                right: 24px;
+                width: 56px;
+                height: 56px;
+            }
+
+            .meeting-form {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-  <script type="module" crossorigin src="/minmibookshelf/assets/index-WpbP58Hm.js"></script>
+  <script type="module" crossorigin src="/minmibookshelf/assets/index-Cka114r9.js"></script>
 </head>
 <body>
     <div id="passcode-screen">
