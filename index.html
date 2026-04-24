@@ -24,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* --- Passcode Screen --- */
         #passcode-screen {
             position: fixed;
             top: 0;
@@ -81,7 +80,6 @@
             display: none;
         }
 
-        /* --- Main Bookshelf --- */
         #main-content {
             padding: 40px 20px;
             max-width: 1000px;
@@ -119,7 +117,7 @@
             background: var(--shelf-color);
             height: 15px;
             width: 100%;
-            margin-top: 180px; /* Space for books */
+            margin-top: 210px;
             border-radius: 2px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
@@ -146,13 +144,14 @@
             align-items: flex-end;
             padding: 0 10px;
             flex-wrap: wrap;
+            box-sizing: border-box;
         }
 
         .book {
             position: relative;
             width: 100px;
             height: 150px;
-            margin: 0 5px 20px 5px;
+            margin: 0 5px 45px 5px;
             transition: transform 0.3s;
             cursor: pointer;
             perspective: 1000px;
@@ -172,21 +171,42 @@
 
         .book-info {
             position: absolute;
-            bottom: -30px;
+            bottom: -48px;
             left: 50%;
             transform: translateX(-50%);
-            white-space: nowrap;
+            width: 130px;
+            text-align: center;
             font-size: 0.7rem;
             color: #666;
             opacity: 0;
             transition: opacity 0.3s;
+            line-height: 1.4;
         }
 
         .book:hover .book-info {
             opacity: 1;
         }
 
-        /* --- Floating Action Button --- */
+        .delete-book-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: #d32f2f;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: none;
+            z-index: 10;
+        }
+
+        .book:hover .delete-book-btn {
+            display: block;
+        }
+
         #add-book-btn {
             position: fixed;
             bottom: 40px;
@@ -212,7 +232,6 @@
             background-color: var(--shelf-shadow);
         }
 
-        /* --- Modal --- */
         .modal {
             position: fixed;
             top: 0;
@@ -232,7 +251,7 @@
             padding: 30px;
             border-radius: 15px;
             width: 90%;
-            max-width: 450px;
+            max-width: 500px;
             position: relative;
         }
 
@@ -242,10 +261,32 @@
             color: var(--shelf-color);
         }
 
+        .meeting-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0 10px;
+        }
+
+        .meeting-form label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .meeting-form input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
         .search-box {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .search-box input {
@@ -309,18 +350,17 @@
             color: #aaa;
         }
 
-        /* --- Responsive --- */
         @media (max-width: 600px) {
-            .shelf { margin-top: 150px; }
-            .book { width: 70px; height: 105px; }
+            .shelf { margin-top: 190px; }
+            .book { width: 70px; height: 105px; margin-bottom: 45px; }
+            .book-info { width: 110px; font-size: 0.65rem; }
             #add-book-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+            .meeting-form { grid-template-columns: 1fr; }
         }
     </style>
-  <script type="module" crossorigin src="/minmibookshelf/assets/index-Blbf3Nkm.js"></script>
+  <script type="module" crossorigin src="/minmibookshelf/assets/index-WpbP58Hm.js"></script>
 </head>
 <body>
-
-    <!-- Passcode Section -->
     <div id="passcode-screen">
         <div class="passcode-container">
             <div class="logo-text">민미 서재</div>
@@ -330,29 +370,39 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div id="main-content">
         <header>
             <h1>민미 서재</h1>
             <p>거창하지 않은 독서 모임</p>
         </header>
 
-        <div id="bookshelves" class="bookshelf-container">
-            <!-- Shelves will be generated here -->
-        </div>
+        <div id="bookshelves" class="bookshelf-container"></div>
 
         <button id="add-book-btn" title="책 추가하기">+</button>
     </div>
 
-    <!-- Add Book Modal -->
     <div id="search-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <h2>책 추가하기</h2>
+
+            <div class="meeting-form">
+                <label>
+                    독서 모임 진행 날짜
+                    <input type="date" id="meeting-date-input">
+                </label>
+
+                <label>
+                    독서 모임 회차
+                    <input type="number" id="meeting-round-input" min="1" placeholder="예: 12">
+                </label>
+            </div>
+
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="책 제목을 입력하세요...">
                 <button id="search-btn">검색</button>
             </div>
+
             <div id="search-results"></div>
         </div>
     </div>
