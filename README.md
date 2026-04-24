@@ -1,4 +1,4 @@
- # 📚 1886 서재 (1886 Bookshelf)                                                                           
+ # 📚 민미 서재 (Minmi Bookshelf)                                                                           
                                                                                                            
 프라이빗 독서 모임 멤버들을 위한 **온라인 공유 책장** 서비스입니다. 함께 읽은 책들을 시각적인 책장 형태로  
 아카이빙하고 관리할 수 있습니다.                                                                           
@@ -15,13 +15,7 @@
                                                                                                            
 - **Language:** HTML5, CSS3, JavaScript (Vanilla JS)                                                       
 - **Styling:** CSS Grid & Flexbox, Google Fonts (Noto Serif KR)                                            
-- **Persistence:** LocalStorage API                                                                        
-                                                                                                           
-## 🚀 시작하기                                                                                             
-                                                                                                           
-1. `index.html` 파일을 웹 브라우저(Chrome, Edge 등)로 엽니다.                                              
-2. 입장 암호 창에 `1886`을 입력합니다.                                                                     
-3. 책장의 도서를 확인하거나, 우측 하단의 `+` 버튼을 눌러 새 책을 추가해 보세요.                            
+- **Persistence:** LocalStorage API                                                               
                                                                                                            
 ## 📅 로드맵 (Planned)                                                                                     
                                                                                                            
